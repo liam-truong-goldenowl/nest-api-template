@@ -1,4 +1,5 @@
-import { getEnv, mergeDeepRight } from '@/utils/helpers';
+import { getEnv } from '@/utils/helpers/envs';
+import { mergeDeepRight } from '@/utils/helpers/objects';
 
 import { config as base } from './envs/default';
 import { config as custom } from './envs/production';

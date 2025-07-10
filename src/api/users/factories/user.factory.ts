@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { User } from '../entities';
+import { User } from '../entities/user.entity';
 
 export function createUser(): User {
   const user = new User();

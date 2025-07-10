@@ -1,4 +1,4 @@
-import { Env } from '@/utils/constants';
+import { Env } from '@/utils/constants/envs';
 
 export const getEnv = (): string => process.env.NODE_ENV || Env.DEVELOPMENT;
 

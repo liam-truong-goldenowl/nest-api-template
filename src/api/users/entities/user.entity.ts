@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { BaseEntity } from '@/common/entities';
+import { BaseEntity } from '@/common/entities/base.entity';
 import { Task } from '@/api/tasks/entities/task.entity';
 
 @Entity('users')

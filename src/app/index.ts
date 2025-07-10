@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 
 import type { INestApplication } from '@nestjs/common';
 
-import { isDevelopmentEnv } from '@/utils/helpers';
+import { isDevelopmentEnv } from '@/utils/helpers/envs';
 
 import { AppModule } from './app.module';
 import { genAPIDocument } from './app.document';
