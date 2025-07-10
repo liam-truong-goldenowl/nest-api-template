@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { TaskStatus } from '@/common/enums';
+import { ResponseDto } from '@/common/dto/response.dto';
 
-export class TaskResponseDto {
+export class TaskResponseDto extends ResponseDto {
   @ApiProperty()
   title: string;
 

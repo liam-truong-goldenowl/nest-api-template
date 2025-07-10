@@ -45,7 +45,7 @@ export class UsersService {
     return users.map((user) => UserResponseFactory.for(user));
   }
 
-  async findOne(id: number): Promise<UserResponseDto | null> {
+  async findOne(id: number): Promise<UserResponseDto> {
     const user = await this.usersRepository.findOneBy({ id });
 
     if (!user) {
@@ -59,6 +59,26 @@ export class UsersService {
     id: number,
     updateUserDto: UpdateUserDto,
   ): Promise<UserResponseDto> {
+    if (updateUserDto.username) {
+      const existingUsername = await this.usersRepository.findOne({
+        where: { username: updateUserDto.username },
+      });
+
+      if (existingUsername && existingUsername.id !== id) {
+        throw new BadRequestException('Username already exists');
+      }
+    }
+
+    if (updateUserDto.email) {
+      const existingEmail = await this.usersRepository.findOne({
+        where: { email: updateUserDto.email },
+      });
+
+      if (existingEmail && existingEmail.id !== id) {
+        throw new BadRequestException('Email already exists');
+      }
+    }
+
     const user = await this.usersRepository.preload({ id, ...updateUserDto });
 
     if (!user) {

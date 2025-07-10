@@ -7,6 +7,7 @@ import {
   Delete,
   Controller,
   ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -37,7 +38,7 @@ export class UsersController {
   @ApiBadRequestResponse({
     description: 'Bad Request. The input data is invalid.',
   })
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
@@ -88,7 +89,7 @@ export class UsersController {
   })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.update(id, updateUserDto);
   }

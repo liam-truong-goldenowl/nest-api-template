@@ -1,9 +1,20 @@
+import {
+  IsEmail,
+  IsString,
+  MaxLength,
+  MinLength,
+  IsOptional,
+} from 'class-validator';
 import { ApiPropertyOptional, ApiSchema } from '@nestjs/swagger';
 
 @ApiSchema({
   description: 'Data transfer object for updating a user',
 })
 export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(20)
   @ApiPropertyOptional({
     example: 'john_doe',
     minLength: 3,
@@ -11,6 +22,8 @@ export class UpdateUserDto {
   })
   username?: string;
 
+  @IsOptional()
+  @IsEmail()
   @ApiPropertyOptional({
     example: 'john.doe@example.com',
     format: 'email',
