@@ -7,7 +7,7 @@ dotenvConfig();
 
 const configService = new ConfigService();
 
-export const connectionSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: 'postgres',
   host: configService.getOrThrow('DB_HOST'),
   port: configService.getOrThrow('DB_PORT'),
