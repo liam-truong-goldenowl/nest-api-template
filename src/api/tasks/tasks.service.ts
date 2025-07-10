@@ -1,5 +1,9 @@
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { UsersService } from '../users/users.service';
@@ -7,6 +11,7 @@ import { UsersService } from '../users/users.service';
 import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskResponseDto } from './dto/task-response.dto';
 import { TaskResponseFactory } from './factories/task-response.factory';
 
 @Injectable()
@@ -16,7 +21,7 @@ export class TasksService {
     private userService: UsersService,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto) {
+  async create(createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
     const userExists = await this.userService.exists(createTaskDto.userId);
 
     if (!userExists) {
@@ -29,12 +34,12 @@ export class TasksService {
     return TaskResponseFactory.for(createdTask);
   }
 
-  async findAll() {
+  async findAll(): Promise<TaskResponseDto[]> {
     const tasks = await this.tasksRepository.find();
     return tasks.map((task) => TaskResponseFactory.for(task));
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<TaskResponseDto> {
     const task = await this.tasksRepository.findOneBy({ id });
 
     if (!task) {
@@ -44,11 +49,36 @@ export class TasksService {
     return TaskResponseFactory.for(task);
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return this.tasksRepository.update(id, updateTaskDto);
+  async update(
+    id: number,
+    updateTaskDto: UpdateTaskDto,
+  ): Promise<TaskResponseDto> {
+    const task = await this.tasksRepository.preload({
+      id,
+      ...updateTaskDto,
+    });
+
+    if (!task) {
+      throw new BadRequestException('Task not found');
+    }
+
+    const updatedTask = await this.tasksRepository.save(task);
+
+    return TaskResponseFactory.for(updatedTask);
   }
 
-  remove(id: number) {
-    return this.tasksRepository.delete(id);
+  async remove(id: number): Promise<void> {
+    const taskExists = await this.tasksRepository.findOneBy({ id });
+
+    if (!taskExists) {
+      throw new NotFoundException('Task not found');
+    }
+
+    await this.tasksRepository.delete(id);
+  }
+
+  async exists(id: number): Promise<boolean> {
+    const task = await this.tasksRepository.findOneBy({ id });
+    return !!task;
   }
 }

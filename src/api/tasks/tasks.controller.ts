@@ -15,6 +15,7 @@ import {
   ApiNotFoundResponse,
   ApiBadRequestResponse,
   ApiOperation,
+  ApiNoContentResponse,
 } from '@nestjs/swagger';
 
 import { TasksService } from './tasks.service';
@@ -73,8 +74,12 @@ export class TasksController {
   }
 
   @Patch(':id')
+  @ApiOperation({
+    summary: 'Update a task by ID',
+  })
   @ApiOkResponse({
     description: 'The task has been successfully updated.',
+    type: TaskResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'Task not found.',
@@ -83,12 +88,18 @@ export class TasksController {
     description:
       'Bad Request. The input data is invalid or the ID provided is invalid.',
   })
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(+id, updateTaskDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ValidationPipe()) updateTaskDto: UpdateTaskDto,
+  ) {
+    return this.tasksService.update(id, updateTaskDto);
   }
 
   @Delete(':id')
-  @ApiOkResponse({
+  @ApiOperation({
+    summary: 'Delete a task by ID',
+  })
+  @ApiNoContentResponse({
     description: 'The task has been successfully deleted.',
   })
   @ApiNotFoundResponse({
@@ -97,7 +108,7 @@ export class TasksController {
   @ApiBadRequestResponse({
     description: 'Bad Request. The ID provided is invalid.',
   })
-  remove(@Param('id') id: string) {
-    return this.tasksService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.tasksService.remove(id);
   }
 }
