@@ -7,6 +7,8 @@ import { TasksModule } from '@/api/tasks/tasks.module';
 import { UsersModule } from '@/api/users/users.module';
 import { DatabaseModule } from '@/database/database.module';
 
+import { AppController } from './app.controller';
+
 const EnvSchema = Joi.object({
   NODE_ENV: Joi.string()
     .valid('development', 'production', 'test')
@@ -30,7 +32,7 @@ const EnvSchema = Joi.object({
     UsersModule,
     DatabaseModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

@@ -17,4 +17,10 @@ export const config = {
     synchronize: false,
     autoLoadEntities: true,
   },
+  swagger: {
+    siteTitle: 'Basic NestJS Template | Documentation',
+    title: 'Basic NestJS Template | Documentation',
+    description: 'The Basic NestJS Template API Documentation',
+    version: '1.0',
+  },
 };
