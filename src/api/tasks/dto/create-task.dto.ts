@@ -34,7 +34,7 @@ export class CreateTaskDto {
   @IsDate()
   @IsOptional()
   @Transform(({ value }) => new Date(value))
-  @ApiPropertyOptional({ example: '2023-10-01T00:00:00Z' })
+  @ApiPropertyOptional({ example: '2023-10-01' })
   dueDate?: Date;
 
   @IsInt()

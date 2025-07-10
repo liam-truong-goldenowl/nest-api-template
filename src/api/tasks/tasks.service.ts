@@ -29,12 +29,19 @@ export class TasksService {
     return TaskResponseFactory.for(createdTask);
   }
 
-  findAll() {
-    return this.tasksRepository.find();
+  async findAll() {
+    const tasks = await this.tasksRepository.find();
+    return tasks.map((task) => TaskResponseFactory.for(task));
   }
 
-  findOne(id: number) {
-    return this.tasksRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const task = await this.tasksRepository.findOneBy({ id });
+
+    if (!task) {
+      throw new BadRequestException('Task not found');
+    }
+
+    return TaskResponseFactory.for(task);
   }
 
   update(id: number, updateTaskDto: UpdateTaskDto) {

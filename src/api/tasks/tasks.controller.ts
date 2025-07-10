@@ -7,6 +7,7 @@ import {
   Delete,
   Controller,
   ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiOkResponse,
@@ -19,6 +20,7 @@ import {
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskResponseDto } from './dto/task-response.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -30,6 +32,7 @@ export class TasksController {
   })
   @ApiCreatedResponse({
     description: 'The task has been successfully created.',
+    type: TaskResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Bad Request. The input data is invalid.',
@@ -39,16 +42,25 @@ export class TasksController {
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Get all tasks',
+  })
   @ApiOkResponse({
     description: 'Returns a list of all tasks.',
+    isArray: true,
+    type: TaskResponseDto,
   })
   findAll() {
     return this.tasksService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get a task by ID',
+  })
   @ApiOkResponse({
     description: 'Returns a task by its ID.',
+    type: TaskResponseDto,
   })
   @ApiNotFoundResponse({
     description: 'Task not found.',
@@ -56,8 +68,8 @@ export class TasksController {
   @ApiBadRequestResponse({
     description: 'Bad Request. The ID provided is invalid.',
   })
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.tasksService.findOne(id);
   }
 
   @Patch(':id')
