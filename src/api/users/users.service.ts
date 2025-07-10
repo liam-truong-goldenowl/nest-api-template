@@ -99,4 +99,9 @@ export class UsersService {
 
     await this.usersRepository.remove(user);
   }
+
+  async exists(id: number): Promise<boolean> {
+    const user = await this.usersRepository.findOneBy({ id });
+    return !!user;
+  }
 }

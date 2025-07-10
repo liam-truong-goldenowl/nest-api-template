@@ -6,12 +6,14 @@ import {
   Patch,
   Delete,
   Controller,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiBadRequestResponse,
+  ApiOperation,
 } from '@nestjs/swagger';
 
 import { TasksService } from './tasks.service';
@@ -23,13 +25,16 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
+  @ApiOperation({
+    summary: 'Create a new task',
+  })
   @ApiCreatedResponse({
     description: 'The task has been successfully created.',
   })
   @ApiBadRequestResponse({
     description: 'Bad Request. The input data is invalid.',
   })
-  create(@Body() createTaskDto: CreateTaskDto) {
+  create(@Body(new ValidationPipe()) createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }
 
