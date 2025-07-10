@@ -2,9 +2,10 @@ import * as Joi from 'joi';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { configuration } from '@/config';
+import { appConfig } from '@/config/app.config';
 import { TasksModule } from '@/api/tasks/tasks.module';
 import { UsersModule } from '@/api/users/users.module';
+import { typeOrmConfig } from '@/config/typeorm.config';
 import { DatabaseModule } from '@/database/database.module';
 
 import { AppController } from './app.controller';
@@ -26,7 +27,7 @@ const EnvSchema = Joi.object({
   imports: [
     ConfigModule.forRoot({
       validationSchema: EnvSchema,
-      load: [configuration],
+      load: [appConfig, typeOrmConfig, appConfig],
     }),
     TasksModule,
     UsersModule,

@@ -8,7 +8,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>
-        configService.get<TypeOrmModuleOptions>('db')!,
+        configService.get<TypeOrmModuleOptions>('typeorm')!,
     }),
   ],
 })
