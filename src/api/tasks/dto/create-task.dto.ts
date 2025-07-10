@@ -3,7 +3,6 @@ import { ApiProperty, ApiPropertyOptional, ApiSchema } from '@nestjs/swagger';
 import { TaskStatus } from '@/common/enums';
 
 @ApiSchema({
-  name: 'CreateTaskRequest',
   description: 'Data transfer object for creating a task',
 })
 export class CreateTaskDto {
