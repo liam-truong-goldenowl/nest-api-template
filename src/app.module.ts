@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { configuration } from '@/config';
 import { EnvSchema } from './utils/constants';
+
 import { TasksModule } from '@/api/tasks/tasks.module';
 import { UsersModule } from '@/api/users/users.module';
 import { DatabaseModule } from '@/database/database.module';
