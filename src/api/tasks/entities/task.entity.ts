@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 
 import { TaskStatus } from '@/common/enums';
-import { BaseEntity } from '@/common/entities/base.entity';
 import { User } from '@/api/users/entities/user.entity';
+import { BaseEntity } from '@/common/entities/base.entity';
 
 @Entity('tasks')
 export class Task extends BaseEntity {

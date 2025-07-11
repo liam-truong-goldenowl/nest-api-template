@@ -1,3 +1,5 @@
+import { Transform } from 'class-transformer';
+import { ApiSchema, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsInt,
   IsDate,
@@ -7,8 +9,6 @@ import {
   IsNotEmpty,
   IsOptional,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional, ApiSchema } from '@nestjs/swagger';
 
 @ApiSchema({
   description: 'Data transfer object for creating a task',

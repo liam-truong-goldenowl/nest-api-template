@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Get, Controller } from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiServiceUnavailableResponse,

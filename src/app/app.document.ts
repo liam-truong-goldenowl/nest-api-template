@@ -1,10 +1,10 @@
+import { ConfigService } from '@nestjs/config';
 import {
   SwaggerModule,
   DocumentBuilder,
   SwaggerCustomOptions,
   SwaggerDocumentOptions,
 } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
 
 import type { INestApplication } from '@nestjs/common';
 

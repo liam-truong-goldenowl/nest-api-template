@@ -1,3 +1,4 @@
+import { ApiSchema, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsString,
@@ -5,7 +6,6 @@ import {
   MinLength,
   IsOptional,
 } from 'class-validator';
-import { ApiPropertyOptional, ApiSchema } from '@nestjs/swagger';
 
 @ApiSchema({
   description: 'Data transfer object for updating a user',
