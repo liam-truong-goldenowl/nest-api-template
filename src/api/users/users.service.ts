@@ -53,24 +53,26 @@ export class UsersService {
   ): Promise<UserResponseDto> {
     await this.validateUserExists(id);
 
-    if (updateUserDto.username) {
-      const existingUsername = await this.usersRepository.findOne({
-        where: { username: updateUserDto.username },
-      });
+    const { username, email } = updateUserDto;
 
-      if (existingUsername && existingUsername.id !== id) {
-        throw new BadRequestException('Username already exists');
-      }
+    const existingUsernames = username
+      ? this.usersRepository.findOne({ where: { username } })
+      : Promise.resolve(null);
+    const existingEmails = email
+      ? this.usersRepository.findOne({ where: { email } })
+      : Promise.resolve(null);
+
+    const [existingUsername, existingEmail] = await Promise.all([
+      existingUsernames,
+      existingEmails,
+    ]);
+
+    if (existingUsername && existingUsername.id !== id) {
+      throw new BadRequestException('Username already exists');
     }
 
-    if (updateUserDto.email) {
-      const existingEmail = await this.usersRepository.findOne({
-        where: { email: updateUserDto.email },
-      });
-
-      if (existingEmail && existingEmail.id !== id) {
-        throw new BadRequestException('Email already exists');
-      }
+    if (existingEmail && existingEmail.id !== id) {
+      throw new BadRequestException('Email already exists');
     }
 
     const user = await this.usersRepository.preload({ id, ...updateUserDto });
