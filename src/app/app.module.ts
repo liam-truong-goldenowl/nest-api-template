@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from '@/api/tasks/tasks.module';
 import { UsersModule } from '@/api/users/users.module';
 import { DatabaseModule } from '@/database/database.module';
+import { CoursesModule } from '@/api/courses/courses.module';
 import { appConfig, EnvSchema, typeOrmConfig, swaggerConfig } from '@/config';
 
 import { AppController } from './app.controller';
@@ -16,6 +17,7 @@ import { AppController } from './app.controller';
     }),
     TasksModule,
     UsersModule,
+    CoursesModule,
     DatabaseModule,
   ],
   controllers: [AppController],
