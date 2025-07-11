@@ -102,6 +102,6 @@ export class UsersService {
 
   async exists(id: number): Promise<boolean> {
     const user = await this.usersRepository.findOneBy({ id });
-    return !!user;
+    return Boolean(user);
   }
 }

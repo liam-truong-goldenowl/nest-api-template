@@ -79,6 +79,6 @@ export class TasksService {
 
   async exists(id: number): Promise<boolean> {
     const task = await this.tasksRepository.findOneBy({ id });
-    return !!task;
+    return Boolean(task);
   }
 }
