@@ -8,12 +8,11 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column()
+  password: string;
 
-  @Column({ name: 'avatar_url', nullable: true })
-  avatarUrl?: string;
-
-  @OneToMany(() => Task, (task) => task.user)
+  @OneToMany(() => Task, (task) => task.user, {
+    cascade: true,
+  })
   tasks: Task[];
 }

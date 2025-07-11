@@ -6,6 +6,7 @@ import {
   Patch,
   Delete,
   HttpCode,
+  UseGuards,
   HttpStatus,
   Controller,
   ParseIntPipe,
@@ -14,18 +15,23 @@ import {
 import {
   ApiOperation,
   ApiOkResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 
+import { ReqUser, TReqUser } from '@/decorators/api.decorator';
+
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskResponseDto } from './dto/task-response.dto';
+import { TaskOwnerGuard } from './guards/task-owner.guard';
 
-@Controller('tasks')
+@ApiBearerAuth()
+@Controller('users/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -40,8 +46,11 @@ export class TasksController {
   @ApiBadRequestResponse({
     description: 'Bad Request. The input data is invalid.',
   })
-  create(@Body(new ValidationPipe()) createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  create(
+    @Body(new ValidationPipe()) createTaskDto: CreateTaskDto,
+    @ReqUser() user: TReqUser,
+  ) {
+    return this.tasksService.create(user.id, createTaskDto);
   }
 
   @Get()
@@ -53,11 +62,12 @@ export class TasksController {
     isArray: true,
     type: TaskResponseDto,
   })
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@ReqUser() user: TReqUser) {
+    return this.tasksService.findAllFromUser(user.id);
   }
 
   @Get(':id')
+  @UseGuards(TaskOwnerGuard)
   @ApiOperation({
     summary: 'Get a task by ID',
   })
@@ -71,11 +81,15 @@ export class TasksController {
   @ApiBadRequestResponse({
     description: 'Bad Request. The ID provided is invalid.',
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.tasksService.findOne(id);
+  findOne(
+    @Param('id', ParseIntPipe) taskId: number,
+    @ReqUser() user: TReqUser,
+  ) {
+    return this.tasksService.findOneFromUser(user.id, taskId);
   }
 
   @Patch(':id')
+  @UseGuards(TaskOwnerGuard)
   @ApiOperation({
     summary: 'Update a task by ID',
   })
@@ -91,13 +105,15 @@ export class TasksController {
       'Bad Request. The input data is invalid or the ID provided is invalid.',
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @ReqUser() user: TReqUser,
+    @Param('id', ParseIntPipe) taskId: number,
     @Body(new ValidationPipe()) updateTaskDto: UpdateTaskDto,
   ) {
-    return this.tasksService.update(id, updateTaskDto);
+    return this.tasksService.updateFromUser(user.id, taskId, updateTaskDto);
   }
 
   @Delete(':id')
+  @UseGuards(TaskOwnerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Delete a task by ID',
@@ -111,7 +127,7 @@ export class TasksController {
   @ApiBadRequestResponse({
     description: 'Bad Request. The ID provided is invalid.',
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.tasksService.remove(id);
+  remove(@ReqUser() user: TReqUser, @Param('id', ParseIntPipe) taskId: number) {
+    return this.tasksService.removeFromUser(user.id, taskId);
   }
 }

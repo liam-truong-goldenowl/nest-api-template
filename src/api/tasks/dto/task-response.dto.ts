@@ -20,4 +20,9 @@ export class TaskResponseDto extends ResponseDto {
     example: '2023-10-01T00:00:00Z',
   })
   dueDate?: Date;
+
+  @ApiProperty({
+    example: '1',
+  })
+  userId: number;
 }

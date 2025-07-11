@@ -22,7 +22,7 @@ export class Task extends BaseEntity {
   @Column({ name: 'due_date', nullable: true })
   dueDate?: Date;
 
-  @ManyToOne(() => User, (user) => user.tasks)
+  @ManyToOne(() => User, (user) => user.tasks, { eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
 }

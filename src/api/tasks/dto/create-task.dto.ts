@@ -1,12 +1,10 @@
 import { Transform } from 'class-transformer';
 import { ApiSchema, ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
-  IsInt,
   IsDate,
   IsString,
   MaxLength,
   MinLength,
-  IsNotEmpty,
   IsOptional,
 } from 'class-validator';
 
@@ -36,9 +34,4 @@ export class CreateTaskDto {
   @Transform(({ value }) => new Date(value))
   @ApiPropertyOptional({ example: '2023-10-01' })
   dueDate?: Date;
-
-  @IsInt()
-  @IsNotEmpty()
-  @ApiProperty({ example: 1, description: 'ID of the user who owns the task' })
-  userId: number;
 }

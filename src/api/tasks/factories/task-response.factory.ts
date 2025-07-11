@@ -10,6 +10,7 @@ export class TaskResponseFactory {
       status: task.status,
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
+      userId: task.user.id,
     };
   }
 }
