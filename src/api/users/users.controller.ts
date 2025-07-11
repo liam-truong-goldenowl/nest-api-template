@@ -1,11 +1,13 @@
 import {
   Get,
-  Post,
   Body,
-  Patch,
+  Post,
   Param,
+  Patch,
   Delete,
+  HttpCode,
   Controller,
+  HttpStatus,
   ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
@@ -95,6 +97,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Delete a user by ID',
   })

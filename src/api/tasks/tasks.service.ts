@@ -22,11 +22,7 @@ export class TasksService {
   ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
-    const userExists = await this.userService.exists(createTaskDto.userId);
-
-    if (!userExists) {
-      throw new BadRequestException('User does not exist');
-    }
+    await this.userService.validateUserExists(createTaskDto.userId);
 
     const task = this.tasksRepository.create(createTaskDto);
     const createdTask = await this.tasksRepository.save(task);
@@ -40,45 +36,35 @@ export class TasksService {
   }
 
   async findOne(id: number): Promise<TaskResponseDto> {
-    const task = await this.tasksRepository.findOne({ where: { id } });
-
-    if (!task) {
+    try {
+      const task = await this.tasksRepository.findOneOrFail({ where: { id } });
+      return TaskResponseFactory.for(task);
+    } catch {
       throw new BadRequestException('Task not found');
     }
-
-    return TaskResponseFactory.for(task);
   }
 
   async update(
     id: number,
     updateTaskDto: UpdateTaskDto,
   ): Promise<TaskResponseDto> {
-    const task = await this.tasksRepository.preload({
-      id,
-      ...updateTaskDto,
-    });
+    await this.validateTaskExists(id);
 
-    if (!task) {
-      throw new BadRequestException('Task not found');
-    }
-
-    const updatedTask = await this.tasksRepository.save(task);
+    const task = await this.tasksRepository.preload({ id, ...updateTaskDto });
+    const updatedTask = await this.tasksRepository.save(task!);
 
     return TaskResponseFactory.for(updatedTask);
   }
 
   async remove(id: number): Promise<void> {
-    const taskExists = await this.tasksRepository.findOne({ where: { id } });
-
-    if (!taskExists) {
-      throw new NotFoundException('Task not found');
-    }
-
+    await this.validateTaskExists(id);
     await this.tasksRepository.delete(id);
   }
 
-  async exists(id: number): Promise<boolean> {
-    const task = await this.tasksRepository.findOne({ where: { id } });
-    return Boolean(task);
+  async validateTaskExists(id: number): Promise<void> {
+    const exists = await this.tasksRepository.exists({ where: { id } });
+    if (!exists) {
+      throw new NotFoundException('Task not found');
+    }
   }
 }

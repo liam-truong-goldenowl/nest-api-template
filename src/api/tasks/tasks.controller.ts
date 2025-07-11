@@ -5,17 +5,19 @@ import {
   Param,
   Patch,
   Delete,
+  HttpCode,
+  HttpStatus,
   Controller,
-  ValidationPipe,
   ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
+  ApiOperation,
   ApiOkResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
-  ApiBadRequestResponse,
-  ApiOperation,
   ApiNoContentResponse,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger';
 
 import { TasksService } from './tasks.service';
@@ -96,6 +98,7 @@ export class TasksController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Delete a task by ID',
   })
