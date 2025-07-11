@@ -19,13 +19,14 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    if (createUserDto.username) {
-      await this.validateUsernameExists(createUserDto.username);
-    }
+    const existingEmailPromise = createUserDto.email
+      ? this.validateEmailExists(createUserDto.email)
+      : Promise.resolve(null);
+    const existingUsernamePromise = createUserDto.username
+      ? this.validateUsernameExists(createUserDto.username)
+      : Promise.resolve(null);
 
-    if (createUserDto.email) {
-      await this.validateEmailExists(createUserDto.email);
-    }
+    await Promise.all([existingEmailPromise, existingUsernamePromise]);
 
     const user = this.usersRepository.create(createUserDto);
     const createdUser = await this.usersRepository.save(user);
