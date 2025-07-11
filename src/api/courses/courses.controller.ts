@@ -19,4 +19,10 @@ export class CoursesController {
     console.log('Username:', username);
     return { username };
   }
+
+  @Get('interceptor-test')
+  findInterceptor() {
+    console.log('This route is intercepted by LoggingInterceptor');
+    return { message: 'This route is intercepted by LoggingInterceptor' };
+  }
 }
