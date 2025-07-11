@@ -1,3 +1,5 @@
+import { Transform } from 'class-transformer';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDate,
   IsString,
@@ -5,8 +7,6 @@ import {
   MinLength,
   IsOptional,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateTaskDto {
   @IsOptional()

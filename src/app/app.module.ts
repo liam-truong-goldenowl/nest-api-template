@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from '@/api/tasks/tasks.module';
 import { UsersModule } from '@/api/users/users.module';
 import { DatabaseModule } from '@/database/database.module';
-import { typeOrmConfig, appConfig, swaggerConfig, EnvSchema } from '@/config';
+import { appConfig, EnvSchema, typeOrmConfig, swaggerConfig } from '@/config';
 
 import { AppController } from './app.controller';
 
