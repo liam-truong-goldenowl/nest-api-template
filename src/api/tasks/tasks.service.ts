@@ -40,7 +40,7 @@ export class TasksService {
   }
 
   async findOne(id: number): Promise<TaskResponseDto> {
-    const task = await this.tasksRepository.findOneBy({ id });
+    const task = await this.tasksRepository.findOne({ where: { id } });
 
     if (!task) {
       throw new BadRequestException('Task not found');
@@ -68,7 +68,7 @@ export class TasksService {
   }
 
   async remove(id: number): Promise<void> {
-    const taskExists = await this.tasksRepository.findOneBy({ id });
+    const taskExists = await this.tasksRepository.findOne({ where: { id } });
 
     if (!taskExists) {
       throw new NotFoundException('Task not found');
@@ -78,7 +78,7 @@ export class TasksService {
   }
 
   async exists(id: number): Promise<boolean> {
-    const task = await this.tasksRepository.findOneBy({ id });
-    return !!task;
+    const task = await this.tasksRepository.findOne({ where: { id } });
+    return Boolean(task);
   }
 }
