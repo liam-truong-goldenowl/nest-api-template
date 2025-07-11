@@ -21,10 +21,10 @@ export class UsersService {
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const existingEmailPromise = createUserDto.email
       ? this.validateUniqueEmail(createUserDto.email)
-      : Promise.resolve(null);
+      : Promise.resolve();
     const existingUsernamePromise = createUserDto.username
       ? this.validateUniqueUsername(createUserDto.username)
-      : Promise.resolve(null);
+      : Promise.resolve();
 
     await Promise.all([existingEmailPromise, existingUsernamePromise]);
 
