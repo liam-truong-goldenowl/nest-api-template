@@ -1,4 +1,32 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+import {
+  IsEmail,
+  IsString,
+  MaxLength,
+  MinLength,
+  IsOptional,
+} from 'class-validator';
+import { ApiPropertyOptional, ApiSchema } from '@nestjs/swagger';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+@ApiSchema({
+  description: 'Data transfer object for updating a user',
+})
+export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(20)
+  @ApiPropertyOptional({
+    example: 'john_doe',
+    minLength: 3,
+    maxLength: 20,
+  })
+  username?: string;
+
+  @IsOptional()
+  @IsEmail()
+  @ApiPropertyOptional({
+    example: 'john.doe@example.com',
+    format: 'email',
+  })
+  email?: string;
+}

@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { BaseEntity } from '@/common/entities';
 import { Task } from '@/api/tasks/entities/task.entity';
+import { BaseEntity } from '@/common/entities/base.entity';
 
 @Entity('users')
 export class User extends BaseEntity {

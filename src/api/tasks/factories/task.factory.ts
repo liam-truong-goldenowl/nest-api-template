@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 
 import { TaskStatus } from '@/common/enums';
 
-import { Task } from '../entities';
+import { Task } from '../entities/task.entity';
 
 export function createTask(): Task {
   const task = new Task();
