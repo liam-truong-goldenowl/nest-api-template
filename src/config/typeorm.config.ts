@@ -2,7 +2,7 @@ import { registerAs } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
-import { Env } from '@/utils/constants/envs';
+import { Env } from '@/utils/constants';
 import { getEnv } from '@/utils/helpers/envs';
 import { mergeDeepRight } from '@/utils/helpers/objects';
 
