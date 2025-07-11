@@ -13,4 +13,10 @@ export class CoursesController {
     console.log('User Info:', user);
     return this.coursesService.findAll();
   }
+
+  @Get('field')
+  findField(@User('username') username: string) {
+    console.log('Username:', username);
+    return { username };
+  }
 }
