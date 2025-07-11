@@ -7,6 +7,7 @@ import { isDevelopmentEnv } from '@/utils/helpers/envs';
 
 import { AppModule } from './app.module';
 import { genAPIDocument } from './app.document';
+import { applyInterceptors } from './app.interceptor';
 
 export const initApplication = async (): Promise<INestApplication> => {
   const isDevEnv = isDevelopmentEnv();
@@ -22,6 +23,8 @@ export const initApplication = async (): Promise<INestApplication> => {
   app.setGlobalPrefix('v1/api', {
     exclude: [{ path: 'health', method: RequestMethod.GET }],
   });
+
+  applyInterceptors(app);
 
   if (isDevEnv) {
     genAPIDocument(app);
