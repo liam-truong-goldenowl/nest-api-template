@@ -4,20 +4,20 @@ import {
   SwaggerCustomOptions,
   SwaggerDocumentOptions,
 } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 import type { INestApplication } from '@nestjs/common';
 
-import { configuration } from '@/config';
+import type { TSwaggerConfig } from '@/config';
 
-import type { TConfig } from '@/config';
-
-export const genAPIDocument = async (app: INestApplication): Promise<void> => {
-  const config: TConfig = await configuration();
+export const genAPIDocument = (app: INestApplication) => {
+  const configService = app.get(ConfigService);
+  const config = configService.get<TSwaggerConfig>('swagger')!;
 
   const documentConfig = new DocumentBuilder()
-    .setTitle(config.swagger.title)
-    .setVersion(config.swagger.version)
-    .setDescription(config.swagger.description)
+    .setTitle(config.title)
+    .setVersion(config.version)
+    .setDescription(config.description)
     .addBearerAuth()
     .build();
 
@@ -32,7 +32,7 @@ export const genAPIDocument = async (app: INestApplication): Promise<void> => {
   );
 
   const customOptions: SwaggerCustomOptions = {
-    customSiteTitle: config.swagger.siteTitle,
+    customSiteTitle: config.siteTitle,
   };
 
   SwaggerModule.setup('api/documentation', app, document, customOptions);

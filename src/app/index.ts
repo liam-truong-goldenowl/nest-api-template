@@ -20,7 +20,7 @@ export const initApplication = async (): Promise<INestApplication> => {
   });
 
   if (isDevEnv) {
-    await genAPIDocument(app);
+    genAPIDocument(app);
   }
 
   return app;
