@@ -29,40 +29,80 @@ export class TasksService {
     return TaskResponseFactory.for(createdTask);
   }
 
-  async findAll(): Promise<TaskResponseDto[]> {
-    const tasks = await this.tasksRepository.find();
+  async findAllFromUser(userId: User['id']): Promise<TaskResponseDto[]> {
+    const tasks = await this.tasksRepository.find({
+      where: { user: { id: userId } },
+    });
     return tasks.map((task) => TaskResponseFactory.for(task));
   }
 
-  async findOne(id: number): Promise<TaskResponseDto> {
+  async findOneFromUser(
+    userId: User['id'],
+    taskId: Task['id'],
+  ): Promise<TaskResponseDto> {
     try {
-      const task = await this.tasksRepository.findOneOrFail({ where: { id } });
+      const task = await this.tasksRepository.findOneOrFail({
+        where: { id: taskId, user: { id: userId } },
+      });
       return TaskResponseFactory.for(task);
     } catch {
       throw new NotFoundException('Task not found');
     }
   }
 
-  async update(
-    id: number,
+  async updateFromUser(
+    userId: User['id'],
+    taskId: Task['id'],
     updateTaskDto: UpdateTaskDto,
   ): Promise<TaskResponseDto> {
-    await this.validateTaskExists(id);
+    await this.validateTaskExists({ userId, taskId });
 
-    const task = await this.tasksRepository.preload({ id, ...updateTaskDto });
+    const task = await this.tasksRepository.preload({
+      id: taskId,
+      ...updateTaskDto,
+    });
     const updatedTask = await this.tasksRepository.save(task!);
 
     return TaskResponseFactory.for(updatedTask);
   }
 
-  async remove(id: number): Promise<void> {
-    await this.validateTaskExists(id);
-    await this.tasksRepository.delete(id);
+  async removeFromUser(userId: User['id'], taskId: Task['id']): Promise<void> {
+    await this.validateTaskExists({ userId, taskId });
+    await this.tasksRepository.delete(taskId);
   }
 
-  async validateTaskExists(id: number): Promise<void> {
-    const exists = await this.tasksRepository.exists({ where: { id } });
+  async validateTaskExists({
+    userId,
+    taskId,
+  }: {
+    userId: User['id'];
+    taskId: Task['id'];
+  }): Promise<void> {
+    const exists = await this.tasksRepository.exists({
+      where: { id: taskId, user: { id: userId } },
+    });
     if (!exists) {
+      throw new NotFoundException('Task not found');
+    }
+  }
+
+  async findOne(taskId: Task['id']): Promise<TaskResponseDto> {
+    try {
+      const task = await this.tasksRepository.findOneOrFail({
+        where: { id: taskId },
+        relations: ['user'],
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          dueDate: true,
+          user: {
+            id: true,
+          },
+        },
+      });
+      return TaskResponseFactory.for(task);
+    } catch {
       throw new NotFoundException('Task not found');
     }
   }
