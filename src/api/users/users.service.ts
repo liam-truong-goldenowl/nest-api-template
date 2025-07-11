@@ -88,7 +88,7 @@ export class UsersService {
 
   async validateEmailExists(email: string): Promise<void> {
     const emailExists = await this.usersRepository.exists({ where: { email } });
-    if (!emailExists) {
+    if (emailExists) {
       throw new BadRequestException('Email already exists');
     }
   }
@@ -97,7 +97,7 @@ export class UsersService {
     const usernameExists = await this.usersRepository.exists({
       where: { username },
     });
-    if (!usernameExists) {
+    if (usernameExists) {
       throw new BadRequestException('Username already exists');
     }
   }
