@@ -1,10 +1,6 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { UsersService } from '../users/users.service';
 
@@ -40,7 +36,7 @@ export class TasksService {
       const task = await this.tasksRepository.findOneOrFail({ where: { id } });
       return TaskResponseFactory.for(task);
     } catch {
-      throw new BadRequestException('Task not found');
+      throw new NotFoundException('Task not found');
     }
   }
 
