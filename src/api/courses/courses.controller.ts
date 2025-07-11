@@ -14,12 +14,6 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
-  @Get('field')
-  findField(@ReqUser('username') username: string) {
-    console.log('Username:', username);
-    return { username };
-  }
-
   @Get('interceptor-test')
   findInterceptor() {
     console.log('This route is intercepted by LoggingInterceptor');
