@@ -19,13 +19,14 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    if (createUserDto.username) {
-      await this.validateUsernameExists(createUserDto.username);
-    }
+    const existingEmailPromise = createUserDto.email
+      ? this.validateUniqueEmail(createUserDto.email)
+      : Promise.resolve();
+    const existingUsernamePromise = createUserDto.username
+      ? this.validateUniqueUsername(createUserDto.username)
+      : Promise.resolve();
 
-    if (createUserDto.email) {
-      await this.validateEmailExists(createUserDto.email);
-    }
+    await Promise.all([existingEmailPromise, existingUsernamePromise]);
 
     const user = this.usersRepository.create(createUserDto);
     const createdUser = await this.usersRepository.save(user);
@@ -86,18 +87,18 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async validateEmailExists(email: string): Promise<void> {
+  async validateUniqueEmail(email: string): Promise<void> {
     const emailExists = await this.usersRepository.exists({ where: { email } });
-    if (!emailExists) {
+    if (emailExists) {
       throw new BadRequestException('Email already exists');
     }
   }
 
-  async validateUsernameExists(username: string): Promise<void> {
+  async validateUniqueUsername(username: string): Promise<void> {
     const usernameExists = await this.usersRepository.exists({
       where: { username },
     });
-    if (!usernameExists) {
+    if (usernameExists) {
       throw new BadRequestException('Username already exists');
     }
   }
