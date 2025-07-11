@@ -1,5 +1,5 @@
-import { LogLevel } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { LogLevel, RequestMethod } from '@nestjs/common';
 
 import type { INestApplication } from '@nestjs/common';
 
@@ -17,6 +17,10 @@ export const initApplication = async (): Promise<INestApplication> => {
 
   const app = await NestFactory.create(AppModule, {
     logger: logLevels,
+  });
+
+  app.setGlobalPrefix('v1/api', {
+    exclude: [{ path: 'health', method: RequestMethod.GET }],
   });
 
   if (isDevEnv) {
