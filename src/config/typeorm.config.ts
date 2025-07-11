@@ -11,7 +11,7 @@ export const typeOrmConfig = registerAs('typeorm', (): TypeOrmModuleOptions => {
     type: 'postgres',
     host: process.env.DB_HOST ?? 'localhost',
     port: Number(process.env.DB_PORT ?? 5432),
-    ssl: process.env.DB_SSL === 'true' || false,
+    ssl: process.env.DB_SSL === 'true',
 
     username: process.env.DB_USERNAME ?? 'user',
     password: process.env.DB_PASSWORD ?? 'password',
