@@ -1,42 +1,116 @@
 import {
-  Controller,
   Get,
-  Post,
   Body,
-  Patch,
+  Post,
   Param,
+  Patch,
   Delete,
+  HttpCode,
+  Controller,
+  HttpStatus,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiNoContentResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @ApiOperation({
+    summary: 'Create a new user',
+  })
+  @ApiCreatedResponse({
+    description: 'The user has been successfully created.',
+    type: UserResponseDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request. The input data is invalid.',
+  })
+  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Get all users',
+  })
+  @ApiOkResponse({
+    description: 'Returns a list of all users.',
+    isArray: true,
+    type: UserResponseDto,
+  })
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @ApiOperation({
+    summary: 'Get a user by ID',
+  })
+  @ApiOkResponse({
+    description: 'Returns a user by ID.',
+    type: UserResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request. The ID provided is invalid.',
+  })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @ApiOperation({
+    summary: 'Update a user by ID',
+  })
+  @ApiOkResponse({
+    description: 'The user has been successfully updated.',
+    type: UserResponseDto,
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request. The ID provided is invalid.',
+  })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ValidationPipe()) updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Delete a user by ID',
+  })
+  @ApiNoContentResponse({
+    description: 'The user has been successfully deleted.',
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad Request. The ID provided is invalid.',
+  })
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 }

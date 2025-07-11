@@ -17,7 +17,7 @@ export class Task extends BaseEntity {
     enum: TaskStatus,
     default: TaskStatus.PENDING,
   })
-  status: TaskStatus;
+  status: TaskStatus = TaskStatus.PENDING;
 
   @Column({ name: 'due_date', nullable: true })
   dueDate?: Date;

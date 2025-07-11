@@ -1,10 +1,10 @@
 ## Nest.js Migration Setup
 
-Practice setting up Nest.js project /w TypeORM migrations
+Practice setting up Nest.js project w/ TypeORM migrations
 
 ## Description
 
-Main purpose of this repository is for feedback on the way of migration implementation /w Nest.js and TypeORM
+Main purpose of this repository is for feedback on the way of migration implementation w/ Nest.js and TypeORM
 
 Database Schema:
 

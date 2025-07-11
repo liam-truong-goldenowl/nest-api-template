@@ -1,19 +1,5 @@
-import { getEnv, mergeDeepRight } from '@/utils/helpers';
+export * from './app.config';
+export * from './typeorm.config';
+export * from './swagger.config';
 
-import { config as base } from './envs/default';
-import { config as custom } from './envs/production';
-
-type TDefaultConfig = typeof base;
-type TCustomConfig = typeof custom;
-export type TConfig = TDefaultConfig & TCustomConfig;
-
-export const configuration = async (): Promise<TConfig> => {
-  const { config: baseConfig }: { config: TDefaultConfig } = await import(
-    `${__dirname}/envs/default`
-  );
-  const { config: customConfig }: { config: TCustomConfig } = await import(
-    `${__dirname}/envs/${getEnv()}`
-  );
-
-  return mergeDeepRight(baseConfig, customConfig);
-};
+export * from './env.schema';
