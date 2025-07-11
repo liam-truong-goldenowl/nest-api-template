@@ -14,18 +14,22 @@ import {
 import {
   ApiOperation,
   ApiOkResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 
+import { ReqUser, TReqUser } from '@/decorators/api.decorator';
+
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskResponseDto } from './dto/task-response.dto';
 
-@Controller('tasks')
+@ApiBearerAuth()
+@Controller('users/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -40,8 +44,11 @@ export class TasksController {
   @ApiBadRequestResponse({
     description: 'Bad Request. The input data is invalid.',
   })
-  create(@Body(new ValidationPipe()) createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  create(
+    @Body(new ValidationPipe()) createTaskDto: CreateTaskDto,
+    @ReqUser() user: TReqUser,
+  ) {
+    return this.tasksService.create(user.id, createTaskDto);
   }
 
   @Get()

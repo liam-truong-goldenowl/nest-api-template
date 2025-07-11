@@ -9,7 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
-import { Public } from '@/decorators/api.decorator';
+import { Public, ReqUser } from '@/decorators/api.decorator';
 
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signIn.dto';
@@ -31,9 +31,9 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Get('profile')
-  getProfile(@Request() req: Request) {
+  getProfile(@ReqUser() user: any) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return req['user'];
+    return user;
   }
 
   @Public()
