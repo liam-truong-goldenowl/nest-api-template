@@ -9,6 +9,6 @@ export const jwtConfig = registerAs(
   'jwt',
   (): TJwtConfig => ({
     secret: process.env.JWT_SECRET || 'defaultSecretKey',
-    expiration: '60s',
+    expiration: '1h',
   }),
 );
