@@ -20,10 +20,10 @@ export class UsersService {
   ) {}
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const existingEmailPromise = createUserDto.email
-      ? this.validateEmailExists(createUserDto.email)
+      ? this.validateUniqueEmail(createUserDto.email)
       : Promise.resolve(null);
     const existingUsernamePromise = createUserDto.username
-      ? this.validateUsernameExists(createUserDto.username)
+      ? this.validateUniqueUsername(createUserDto.username)
       : Promise.resolve(null);
 
     await Promise.all([existingEmailPromise, existingUsernamePromise]);
@@ -87,14 +87,14 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async validateEmailExists(email: string): Promise<void> {
+  async validateUniqueEmail(email: string): Promise<void> {
     const emailExists = await this.usersRepository.exists({ where: { email } });
     if (emailExists) {
       throw new BadRequestException('Email already exists');
     }
   }
 
-  async validateUsernameExists(username: string): Promise<void> {
+  async validateUniqueUsername(username: string): Promise<void> {
     const usernameExists = await this.usersRepository.exists({
       where: { username },
     });
